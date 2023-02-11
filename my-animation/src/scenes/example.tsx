@@ -5,6 +5,7 @@ import {all} from '@motion-canvas/core/lib/flow';
 
 export default makeScene2D(function* (view) {
   const myCircle = createRef<Circle>();
+  const secondCircle = createRef<Circle>();
 
   view.add(
     <Circle
@@ -15,9 +16,19 @@ export default makeScene2D(function* (view) {
       fill="#e13238"
     />,
   );
+  view.add(
+    <Circle
+      ref={secondCircle}
+      y={-300}
+      width={240}
+      height={240}
+      fill="e13238"
+    />,
+  );
 
   yield* all(
     myCircle().position.x(300, 1).to(-300, 1),
     myCircle().fill('#e6a700', 1).to('#e13238', 1),
+    secondCircle().position.y(300,1).to(-300,1),
   );
 });
