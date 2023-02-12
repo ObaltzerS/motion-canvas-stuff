@@ -6,6 +6,8 @@ import {waitFor} from '@motion-canvas/core/lib/flow';
 
 export default makeScene2D(function* (view) {
   const radius = createSignal(3);
+  const diameter = createSignal(() => radius() * 2);
+  const circumference = createSignal(() => Math.PI * diameter());
   const area = createSignal(() => Math.PI * radius() * radius());
 
   const scale = 100;
@@ -26,18 +28,32 @@ export default makeScene2D(function* (view) {
       />
       <Line
         points={[
-          Vector2.zero,
+          () => Vector2.left.scale(radius() * scale),
           () => Vector2.right.scale(radius() * scale),
         ]}
         lineDash={[20, 20]}
         startArrow
         endArrow
+        startOffset={8}
+        endOffset={8}
+        lineWidth={8}
+        stroke={'#242424'}
+      />
+      <Line
+        points={[
+          () => Vector2.up.scale(radius() * scale),
+          Vector2.down.scale(0),
+        ]}
+        lineDash={[20, 20]}
+        startArrow
+        endArrow
+        startOffset={8}
         endOffset={8}
         lineWidth={8}
         stroke={'#242424'}
       />
       <Text
-        text={() => `r = ${radius().toFixed(2)}`}
+        text={() => `d = ${diameter().toFixed(2)}`}
         x={() => (radius() * scale) / 2}
         fill={'#242424'}
         {...textStyle}
@@ -48,9 +64,24 @@ export default makeScene2D(function* (view) {
         fill={'#e13238'}
         {...textStyle}
       />
+      <Text
+        text={() => `C = ${circumference().toFixed(2)}`}
+        x={() => radius() * scale}
+        offsetX={-1}
+        fill={'#e13238'}
+        {...textStyle}
+      />
+      <Text
+        text={() => `r = ${radius().toFixed(2)}`}
+        y={() => (radius() * scale) / 3}
+        offsetX={-1}
+        fill={'#242424'}
+        {...textStyle}
+      />
+        
     </>,
   );
 
   yield* radius(4, 2).to(3, 2);
-  yield* waitFor(1);
+  //yield* waitFor(1);
 });
