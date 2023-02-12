@@ -1,34 +1,56 @@
 import {makeScene2D} from '@motion-canvas/2d/lib/scenes';
-import {Circle} from '@motion-canvas/2d/lib/components';
-import {createRef} from '@motion-canvas/core/lib/utils';
-import {all} from '@motion-canvas/core/lib/flow';
+import {Circle, Text, Line} from '@motion-canvas/2d/lib/components';
+import {createSignal} from '@motion-canvas/core/lib/signals';
+import {Vector2} from '@motion-canvas/core/lib/types';
+import {waitFor} from '@motion-canvas/core/lib/flow';
 
 export default makeScene2D(function* (view) {
-  const myCircle = createRef<Circle>();
-  const secondCircle = createRef<Circle>();
+  const radius = createSignal(3);
+  const area = createSignal(() => Math.PI * radius() * radius());
+
+  const scale = 100;
+  const textStyle = {
+    fontWeight: 700,
+    fontSize: 56,
+    offsetY: -1,
+    padding: 20,
+    cache: true,
+  };
 
   view.add(
-    <Circle
-      ref={myCircle}
-      x={-300}
-      width={240}
-      height={240}
-      fill="#e13238"
-    />,
-  );
-  view.add(
-    <Circle
-      ref={secondCircle}
-      y={-300}
-      width={240}
-      height={240}
-      fill="e13238"
-    />,
+    <>
+      <Circle
+        width={() => radius() * scale * 2}
+        height={() => radius() * scale * 2}
+        fill={'#e13238'}
+      />
+      <Line
+        points={[
+          Vector2.zero,
+          () => Vector2.right.scale(radius() * scale),
+        ]}
+        lineDash={[20, 20]}
+        startArrow
+        endArrow
+        endOffset={8}
+        lineWidth={8}
+        stroke={'#242424'}
+      />
+      <Text
+        text={() => `r = ${radius().toFixed(2)}`}
+        x={() => (radius() * scale) / 2}
+        fill={'#242424'}
+        {...textStyle}
+      />
+      <Text
+        text={() => `A = ${area().toFixed(2)}`}
+        y={() => radius() * scale}
+        fill={'#e13238'}
+        {...textStyle}
+      />
+    </>,
   );
 
-  yield* all(
-    myCircle().position.x(300, 1).to(-300, 1),
-    myCircle().fill('#e6a700', 1).to('#e13238', 1),
-    secondCircle().position.y(300,1).to(-300,1),
-  );
+  yield* radius(4, 2).to(3, 2);
+  yield* waitFor(1);
 });
