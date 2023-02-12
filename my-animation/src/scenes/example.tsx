@@ -53,7 +53,7 @@ export default makeScene2D(function* (view) {
         stroke={'#242424'}
       />
       <Text
-        text={() => `d = ${diameter().toFixed(2)}`}
+        text={() => `D = ${diameter().toFixed(2)}`}
         x={() => (radius() * scale) / 2}
         fill={'#242424'}
         {...textStyle}
