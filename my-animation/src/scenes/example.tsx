@@ -9,6 +9,7 @@ export default makeScene2D(function* (view) {
   const diameter = createSignal(() => radius() * 2);
   const circumference = createSignal(() => Math.PI * diameter());
   const area = createSignal(() => Math.PI * radius() * radius());
+  const rotation = createSignal(() => Math.PI / 4);
 
   const scale = 100;
   const textStyle = {
@@ -25,6 +26,7 @@ export default makeScene2D(function* (view) {
         width={() => radius() * scale * 2}
         height={() => radius() * scale * 2}
         fill={'#e13238'}
+        rotation={rotation()}
       />
       <Line
         points={[
@@ -38,6 +40,7 @@ export default makeScene2D(function* (view) {
         endOffset={8}
         lineWidth={8}
         stroke={'#242424'}
+        rotation={rotation()}
       />
       <Line
         points={[
@@ -51,6 +54,7 @@ export default makeScene2D(function* (view) {
         endOffset={8}
         lineWidth={8}
         stroke={'#242424'}
+        rotation={rotation()}
       />
       <Text
         text={() => `D = ${diameter().toFixed(2)}`}
@@ -83,5 +87,6 @@ export default makeScene2D(function* (view) {
   );
 
   yield* radius(4, 2).to(3, 2);
+  yield* rotation(0, 2).to(Math.PI / 4, 2);
   //yield* waitFor(1);
 });
